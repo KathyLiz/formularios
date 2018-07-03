@@ -9,7 +9,16 @@ import com.example.entities.Formulario;
 import com.example.entities.FormularioData;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
+import java.io.File;
+import java.util.HashMap;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JRExporter;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
 /**
  *
  * @author Kathy
@@ -32,6 +41,34 @@ public class Convertidor {
         this.frmData.setTipo(formulario.getTipo());
         System.out.println("Objeto data "+  new Gson().toJson(this.frmData));
        // return formulario;
+    }
+    
+    public void generarReporte () throws JRException{
+        File f_aa_201 = new File("f_aa_201.jasper");
+        HashMap map = new HashMap();
+        map.put("UNIDAD_ACADEMICA",this.frmData.getFacultad()); 
+        map.put("CARRERA",this.frmData.getCarrera()); 
+        map.put("PERIODO",this.frmData.getPeriodo()); 
+        map.put("IDENTIFICACION",this.frmData.getDocumento()); 
+        map.put("NOMBRE",this.frmData.getNombres() + this.frmData.getApellidos()); 
+        map.put("PAGO_PARTES",false); 
+        map.put("PAGO_IECE",false); 
+        map.put("EXTRAORDINARIA",false); 
+        map.put("EXTRAORDINARIA_SR",false); 
+        map.put("PRORROGA",false);
+        map.put("TITULACION_ACTUAL",false);
+        map.put("TITULACION_NUEVO",false);        
+        map.put("ANULACION",true);
+        map.put("ANULACION_MAT_MOD",false);        
+        map.put("JUSTIFICACION",this.frmData.getFacultad());
+        map.put("DOCUMENTO_ADJUNTO",this.frmData.getFacultad());
+        JasperReport reporte = (JasperReport) JRLoader.loadObject(f_aa_201);
+        JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, map);
+        JRExporter exporter = new JRPdfExporter();
+        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+        exporter.setParameter(JRExporterParameter.OUTPUT_FILE, new java.io.File("formularioPDF.pdf"));
+        exporter.exportReport();
+
     }
     
 }
