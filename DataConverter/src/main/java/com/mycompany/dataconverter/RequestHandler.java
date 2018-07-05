@@ -29,7 +29,7 @@ public class RequestHandler implements Runnable {
 
 	    while ((userInput = in.readLine()) != null) {
 	      //
-              userInput=userInput.replaceAll("[^A-Za-z0-9 {}\":,]", "");
+              userInput=userInput.replaceAll("[^A-Za-z0-9 íóúéá{}\":,]", "");
               System.out.println("Received message from " + Thread.currentThread().getName() + " : " + userInput);
               try{
                   converter.convertirJson(userInput);
