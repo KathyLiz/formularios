@@ -10,15 +10,23 @@ import com.example.entities.FormularioData;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JRExporter;
 import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
 /**
  *
  * @author Kathy
@@ -40,7 +48,12 @@ public class Convertidor {
         this.frmData.setFecha(formulario.getFecha());
         this.frmData.setTipo(formulario.getTipo());
         System.out.println("Objeto data "+  new Gson().toJson(this.frmData));
-       // return formulario;
+        try {
+            this.generarReporte ();
+            // return formulario;
+        } catch (JRException ex) {
+            Logger.getLogger(Convertidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void generarReporte () throws JRException{
@@ -56,18 +69,34 @@ public class Convertidor {
         map.put("EXTRAORDINARIA",false); 
         map.put("EXTRAORDINARIA_SR",false); 
         map.put("PRORROGA",false);
-        map.put("TITULACION_ACTUAL",false);
-        map.put("TITULACION_NUEVO",false);        
+        map.put("TITULACION_ACTUAL",null);
+        map.put("TITULACION_NUEVO",null);        
         map.put("ANULACION",true);
         map.put("ANULACION_MAT_MOD",false);        
         map.put("JUSTIFICACION",this.frmData.getFacultad());
         map.put("DOCUMENTO_ADJUNTO",this.frmData.getFacultad());
         JasperReport reporte = (JasperReport) JRLoader.loadObject(f_aa_201);
-        JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, map);
-        JRExporter exporter = new JRPdfExporter();
-        exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-        exporter.setParameter(JRExporterParameter.OUTPUT_FILE, new java.io.File("formularioPDF.pdf"));
-        exporter.exportReport();
+        JasperPrint print = JasperFillManager.fillReport(reporte, map, new JREmptyDataSource());
+        JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, map, new JREmptyDataSource());
+            
+           // JRExporter exporter = new JRPdfExporter();
+           JRDocxExporter exporter = new JRDocxExporter();
+            exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+            exporter.setParameter(JRExporterParameter.OUTPUT_FILE, new java.io.File("formularioPDF.docx"));
+            exporter.exportReport();
+        /*File pdf = null;
+        try {
+            pdf = File.createTempFile("/output.", ".pdf");
+        } catch (IOException ex) {
+            Logger.getLogger(Convertidor.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            JasperExportManager.exportReportToPdfStream(print, new FileOutputStream(pdf));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Convertidor.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
+        
+        System.out.println("termineó");
 
     }
     

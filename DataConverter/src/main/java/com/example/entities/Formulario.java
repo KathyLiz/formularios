@@ -6,31 +6,34 @@
 package com.example.entities;
 
 import java.util.Date;
-
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 /**
  *
  * @author Kathy
  */
 public class Formulario {
+    private String tipo;
+    private String nombre;
     private String facultad;
     private String carrera;
     private String nombres;
     private String apellidos;
     private String documento;
     private String periodo;
-    private Date fecha;
-    private static Formulario formulario;
+    private String fecha;
+  /*  private static Formulario formulario;
     
-   public  static Formulario getInstancia(String facultad, String carrera, String nombres, String apellidos, String documento, String periodo, Date fecha) {
+   public  static Formulario getInstancia(String facultad, String carrera, String nombres, String apellidos, String documento, String periodo, String fecha) {
  
     if (formulario==null) {
 
     formulario = new Formulario(facultad, carrera, nombres, apellidos, documento, periodo, fecha);
     }
     return formulario;
-    }
+    }*/
 
-    private Formulario(String facultad, String carrera, String nombres, String apellidos, String documento, String periodo, Date fecha) {
+    private Formulario(String facultad, String carrera, String nombres, String apellidos, String documento, String periodo, String fecha) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
@@ -60,11 +63,24 @@ public class Formulario {
         return periodo;
     }
 
-    public Date getFecha() {
+    public String getFecha() {
         return fecha;
     }
 
-    public static Formulario getFormulario() {
+    /*public static Formulario getFormulario() {
         return formulario;
+    }*/
+    
+    public String getTipo() {
+        return tipo;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+    
+    public String toString(){
+        Gson gson = new Gson();
+        return gson.toJson(this);
     }
 }

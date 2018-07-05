@@ -1,5 +1,6 @@
 package com.mycompany.dataconverter;
 
+import com.example.util.Convertidor;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -12,6 +13,7 @@ import java.net.Socket;
 public class RequestHandler implements Runnable {
   private final Socket client;
   ServerSocket serverSocket = null;
+  Convertidor converter = new Convertidor();
 
     public RequestHandler(Socket client) {
       this.client = client;
@@ -26,8 +28,15 @@ public class RequestHandler implements Runnable {
 	         String userInput;
 
 	    while ((userInput = in.readLine()) != null) {
-	      userInput=userInput.replaceAll("[^A-Za-z0-9 ]", "");
+	      //
+              userInput=userInput.replaceAll("[^A-Za-z0-9 {}\":,]", "");
               System.out.println("Received message from " + Thread.currentThread().getName() + " : " + userInput);
+              try{
+                  converter.convertirJson(userInput);
+              }catch(Exception e){
+                  System.out.println("Excepcion" + e);
+              }
+              
 	      writer.write("You entered from service: " + userInput);
 	      writer.newLine();
 	      writer.flush();
