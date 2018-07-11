@@ -22,6 +22,8 @@ public class Formulario {
     private String documento;
     private String periodo;
     private String fecha;
+    private String justificacion;
+    private String adjuntos;
   /*  private static Formulario formulario;
     
    public  static Formulario getInstancia(String facultad, String carrera, String nombres, String apellidos, String documento, String periodo, String fecha) {
@@ -77,6 +79,22 @@ public class Formulario {
 
     public String getNombre() {
         return nombre;
+    }
+
+    public String getJustificacion() {
+        return justificacion;
+    }
+
+    public void setJustificacion(String justificacion) {
+        this.justificacion = justificacion;
+    }
+
+    public String getAdjuntos() {
+        return adjuntos;
+    }
+
+    public void setAdjuntos(String adjuntos) {
+        this.adjuntos = adjuntos;
     }
     
     public String toString(){

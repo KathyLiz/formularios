@@ -19,6 +19,8 @@ public class FormularioData {
     private String documento;
     private String periodo;
     private String fecha;
+    private String justificacion;
+    private String adjuntos;
     private static FormularioData formulario = null;
     
    public  static FormularioData getInstancia() {
@@ -112,6 +114,24 @@ public class FormularioData {
     public static void setFormulario(FormularioData formulario) {
         FormularioData.formulario = formulario;
     }
+
+    public String getJustificacion() {
+        return justificacion;
+    }
+
+    public void setJustificacion(String justificacion) {
+        this.justificacion = justificacion;
+    }
+
+    public String getAdjuntos() {
+        return adjuntos;
+    }
+
+    public void setAdjuntos(String adjuntos) {
+        this.adjuntos = adjuntos;
+    }
+    
+    
     
     
 }

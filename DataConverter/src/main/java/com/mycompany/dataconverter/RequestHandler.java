@@ -14,6 +14,7 @@ public class RequestHandler implements Runnable {
   private final Socket client;
   ServerSocket serverSocket = null;
   Convertidor converter = new Convertidor();
+  String resultado;
 
     public RequestHandler(Socket client) {
       this.client = client;
@@ -32,12 +33,12 @@ public class RequestHandler implements Runnable {
               userInput=userInput.replaceAll("[^A-Za-z0-9 íóúéá{}\":,]", "");
               System.out.println("Received message from " + Thread.currentThread().getName() + " : " + userInput);
               try{
-                  converter.convertirJson(userInput);
+                 this.resultado = converter.convertirJson(userInput);
               }catch(Exception e){
                   System.out.println("Excepcion" + e);
               }
               
-	      writer.write("You entered from service: " + userInput);
+	      writer.write("You entered from servi*********ce: " + this.resultado);
 	      writer.newLine();
 	      writer.flush();
 	    }

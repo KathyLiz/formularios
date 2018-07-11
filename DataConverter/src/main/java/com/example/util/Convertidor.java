@@ -14,6 +14,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.sf.jasperreports.engine.JREmptyDataSource;
@@ -34,8 +35,11 @@ import net.sf.jasperreports.engine.export.ooxml.JRDocxExporter;
 public class Convertidor {
     private FormularioData frmData = FormularioData.getInstancia();
     public Convertidor(){}
+    final String uuid = UUID.randomUUID().toString().replace("-", "");
+    private String NOMBRE_ARCHIVO = "formularios_generados/formulario_faa_201_"+uuid+".docx";
+    private String RUTA_ARCHIVO = "formularios_generados/"+this.NOMBRE_ARCHIVO;
     
-    public void convertirJson (String data){
+    public String convertirJson (String data){
         Gson gson = new Gson();
         System.out.println("DATA " + data);
         Formulario formulario = gson.fromJson(data, Formulario.class);
@@ -47,23 +51,26 @@ public class Convertidor {
         this.frmData.setPeriodo(formulario.getPeriodo());
         this.frmData.setFecha(formulario.getFecha());
         this.frmData.setTipo(formulario.getTipo());
+        this.frmData.setJustificacion(formulario.getJustificacion());
+        this.frmData.setAdjuntos(formulario.getAdjuntos());
         System.out.println("Objeto data "+  new Gson().toJson(this.frmData));
         try {
-            this.generarReporte ();
+            return this.generarReporte ();
             // return formulario;
         } catch (JRException ex) {
             Logger.getLogger(Convertidor.class.getName()).log(Level.SEVERE, null, ex);
         }
+        return null;
     }
     
-    public void generarReporte () throws JRException{
+    public String generarReporte () throws JRException{
         File f_aa_201 = new File("f_aa_201.jasper");
         HashMap map = new HashMap();
         map.put("UNIDAD_ACADEMICA",this.frmData.getFacultad()); 
         map.put("CARRERA",this.frmData.getCarrera()); 
         map.put("PERIODO",this.frmData.getPeriodo()); 
         map.put("IDENTIFICACION",this.frmData.getDocumento()); 
-        map.put("NOMBRE",this.frmData.getNombres() + this.frmData.getApellidos()); 
+        map.put("NOMBRE",this.frmData.getNombres() + " " +this.frmData.getApellidos()); 
         map.put("PAGO_PARTES",false); 
         map.put("PAGO_IECE",false); 
         map.put("EXTRAORDINARIA",false); 
@@ -73,8 +80,8 @@ public class Convertidor {
         map.put("TITULACION_NUEVO",null);        
         map.put("ANULACION",true);
         map.put("ANULACION_MAT_MOD",false);        
-        map.put("JUSTIFICACION",this.frmData.getFacultad());
-        map.put("DOCUMENTO_ADJUNTO",this.frmData.getFacultad());
+        map.put("JUSTIFICACION",this.frmData.getJustificacion());
+        map.put("DOCUMENTO_ADJUNTO","Adjunto "+this.frmData.getAdjuntos());
         JasperReport reporte = (JasperReport) JRLoader.loadObject(f_aa_201);
         JasperPrint print = JasperFillManager.fillReport(reporte, map, new JREmptyDataSource());
         JasperPrint jasperPrint = JasperFillManager.fillReport(reporte, map, new JREmptyDataSource());
@@ -82,7 +89,7 @@ public class Convertidor {
            // JRExporter exporter = new JRPdfExporter();
            JRDocxExporter exporter = new JRDocxExporter();
             exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-            exporter.setParameter(JRExporterParameter.OUTPUT_FILE, new java.io.File("formularioPDF.docx"));
+            exporter.setParameter(JRExporterParameter.OUTPUT_FILE, new java.io.File(this.NOMBRE_ARCHIVO));
             exporter.exportReport();
         /*File pdf = null;
         try {
@@ -95,8 +102,8 @@ public class Convertidor {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Convertidor.class.getName()).log(Level.SEVERE, null, ex);
         }*/
-        
-        System.out.println("termineó");
+        return this.RUTA_ARCHIVO;
+       // System.out.println("termineó");
 
     }
     
