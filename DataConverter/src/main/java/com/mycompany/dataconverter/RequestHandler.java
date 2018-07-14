@@ -38,7 +38,7 @@ public class RequestHandler implements Runnable {
                   System.out.println("Excepcion" + e);
               }
               
-	      writer.write("You entered from servi*********ce: " + this.resultado);
+	      writer.write(this.resultado);
 	      writer.newLine();
 	      writer.flush();
 	    }
