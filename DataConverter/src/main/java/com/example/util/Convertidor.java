@@ -36,7 +36,7 @@ public class Convertidor {
     private FormularioData frmData = FormularioData.getInstancia();
     public Convertidor(){}
     final String uuid = UUID.randomUUID().toString().replace("-", "");
-    private String NOMBRE_ARCHIVO = "formularios_generados/formulario_faa_201_"+uuid+".docx";
+    private String NOMBRE_ARCHIVO = "formulario_faa_201_"+uuid+".docx";
     private String RUTA_ARCHIVO = "formularios_generados/"+this.NOMBRE_ARCHIVO;
     
     public String convertirJson (String data){
@@ -89,7 +89,7 @@ public class Convertidor {
            // JRExporter exporter = new JRPdfExporter();
            JRDocxExporter exporter = new JRDocxExporter();
             exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
-            exporter.setParameter(JRExporterParameter.OUTPUT_FILE, new java.io.File(this.NOMBRE_ARCHIVO));
+            exporter.setParameter(JRExporterParameter.OUTPUT_FILE, new java.io.File(this.RUTA_ARCHIVO));
             exporter.exportReport();
         /*File pdf = null;
         try {
@@ -102,7 +102,7 @@ public class Convertidor {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Convertidor.class.getName()).log(Level.SEVERE, null, ex);
         }*/
-        return this.RUTA_ARCHIVO;
+        return this.NOMBRE_ARCHIVO;
        // System.out.println("termineó");
 
     }
